@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>My awesome shadow</title>
+</head>
+
+<body>
+    <div id="app">
+        <nav :style="{background: currentBg, color: currentTxt}">
+            Awesome Shadow
+
+            <input type="checkbox" 
+                   v-model="isDarkModeActivated" 
+                   @change="toggleDarkMode"/> Mode sombre ?
+        </nav>
+    </div>
+
+    <script src="/src/misc/constant.js"></script>
+
+    <!-- Afin de pouvoir importer Vue via la commande import, il est nécessaire de déclarer notre JS comme un module -->
+    <script type="module">
+        import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
+      
+        const app = createApp({
+            //La méthode created() est appelée à la création de l'application
+            created() {
+                document.title = TITLE; //Initialisation de la base <title> à la création de l'application
+                
+                //ATTENTION, la valeur retournée par la méthode `getItem`  est de type `string`
+                const isDarkModeActivated = window.localStorage.getItem('isDarkModeActivated');
+                this.isDarkModeActivated = isDarkModeActivated === 'true';
+                this.toggleDarkMode();
+            },
+            data() {
+                return {
+                    whiteColor: WHITE_COLOR,
+                    darkColor: DARK_COLOR,
+
+                    currentBg: WHITE_COLOR,
+                    currentTxt: DARK_COLOR,
+
+                    isDarkModeActivated: false
+                }
+            },
+            methods:{
+                toggleDarkMode: function(){
+                    console.log('isDarkModeActivated', this.isDarkModeActivated);
+                    window.localStorage.setItem('isDarkModeActivated', this.isDarkModeActivated);
+
+                    if(this.isDarkModeActivated){
+                        this.currentBg = this.darkColor;
+                        this.currentTxt = this.whiteColor;
+                    } else{
+                        this.currentBg = this.whiteColor;
+                        this.currentTxt = this.darkColor;
+                    }
+                }
+            }
+        });
+
+        app.mount('#app');
+      </script>
+</body>
+
+</html>
